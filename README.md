@@ -57,7 +57,7 @@
 # Main options
 SECRET_KEY=django-insecure-hxo3nui5a-*g!bhqqke@5hw58s1&e2pc_0b@05d6xcvwm#bc=&
 DEBUG=True
-ALLOWED_HOSTS=127.0.0.1 localhost
+ALLOWED_HOSTS=127.0.0.1 localhost 0.0.0.0
 
 # Other options
 LANGUAGE_CODE=ru
@@ -73,7 +73,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 
 # CORS tech options
-CORS_ALLOWED_ORIGINS=http://localhost:8000 http://127.0.0.1:8000
+CORS_ALLOWED_ORIGINS=http://localhost:8000 http://127.0.0.1:8000 http://0.0.0.0:8000
 
 # REST FRAMEWORK option
 REST_RENDERER=rest_framework.renderers.JSONRenderer rest_framework.renderers.BrowsableAPIRenderer
@@ -88,7 +88,7 @@ docker-compose up --build
 
 #### 4) Выполнить команды:
 <pre>
-docker exec -it crm_backend_1 bash
+docker exec -it backend_container bash
 </pre>
 <pre>
 python manage.py makemigrations
