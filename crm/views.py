@@ -5,27 +5,27 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsOwnerOrReadOnly, IsAdminOrSuperuserOnly
 from .models import Lead, Agent
 from .services import get_all, last_requests
-from .serializers import AddLeadSerializer, LeadListSerializer, AgentSerializer
+from .serializers import LeadSerializer, AgentSerializer
 
 
 class AddLead(generics.CreateAPIView):
     """ Класс добавления Лида в базу. """
 
     queryset = get_all(Lead)
-    serializer_class = AddLeadSerializer
+    serializer_class = LeadSerializer
 
 
 class LeadList(generics.ListAPIView):
     """ Класс вывода списка всех Лидов"""
 
     queryset = get_all(Lead)
-    serializer_class = LeadListSerializer
+    serializer_class = LeadSerializer
 
 
 class LatestRequests(generics.ListAPIView):
     """ Класс получения заявок. """
 
-    serializer_class = LeadListSerializer
+    serializer_class = LeadSerializer
 
     def get_queryset(self):
         days = self.kwargs['days']
