@@ -1,5 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, AbstractBaseUser, UserManager
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
+from django.conf import settings
+
+from django.contrib.auth import get_user_model
+
 
 from .managers import AgentManager
 
@@ -8,7 +15,7 @@ class AbstractModelDateTime(models.Model):
     """ 
         Абстрактная модель определяющая поля datetimefield для других моделей. 
         updated - Поле последнего обновления;
-        created - Поле создания записи.
+        created - Поле создания записи. 
     """
 
     updated = models.DateTimeField('Обновлено', auto_now=True)
@@ -30,7 +37,7 @@ class Agent(AbstractUser):
     last_name = models.CharField('Фамилия', max_length=256, blank=False)
 
     phone = models.CharField(
-        'Номер телефона', max_length=50, blank=True, unique=True)
+        'Номер телефона', max_length=50, unique=True)
     date_of_birth = models.DateField(
         'Дата рождения', auto_now=False, auto_now_add=False, blank=True, null=True)
 
@@ -40,7 +47,7 @@ class Agent(AbstractUser):
     objects = AgentManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['phone']
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name} [{self.email}]'
@@ -88,3 +95,40 @@ class Lead(AbstractModelDateTime):
         verbose_name = 'Потенциальный клиент'
         verbose_name_plural = 'Потенциальные клиенты'
         db_table = 'leads'
+
+
+class Users(AbstractBaseUser, AbstractModelDateTime):
+    """ Модель пользователей в системе. """
+
+    username = None
+    email = models.EmailField('Email', max_length=256,
+                              unique=True, blank=False)
+    
+    is_verified = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+
+    role_id = models.IntegerField(null=True)
+    role_content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.PROTECT,
+        null=True
+    )
+
+    role = GenericForeignKey(
+        "role_content_type",
+        "role_id"
+    )
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['password', 'email']
+
+    def __str__(self) -> str:
+        return self.email
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        db_table = 'users'

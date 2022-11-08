@@ -28,6 +28,7 @@ class AgentManager(BaseUserManager):
             'is_active',
         )
 
+
         extra_fields.update(
             **dict.fromkeys(superuser_flags, True)
         )
