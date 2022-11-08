@@ -1,19 +1,20 @@
 from rest_framework import serializers
 
-from .models import Lead
+from .models import Lead, Agent
 
 
-class AddLeadSerializer(serializers.ModelSerializer):
-    """ API для добавления Лида в базу данных. """
-
-    class Meta:
-        model = Lead
-        fields = ('name', 'email', 'phone')
-
-
-class LeadListSerializer(serializers.ModelSerializer):
-    """ API для вывода списка Лидов. """
+class LeadSerializer(serializers.ModelSerializer):
+    """ API сериализатор для Лидов. """
 
     class Meta:
         model = Lead
-        fields = ('name', 'email', 'phone')
+        fields = ('name', 'email', 'phone', 'funnel')
+
+
+class AgentSerializer(serializers.ModelSerializer):
+    """ API сериализатор для агентов. """
+
+    class Meta:
+        model = Agent
+        fields = ('id', 'first_name', 'last_name',
+                  'email', 'phone', 'date_of_birth', 'is_staff')
